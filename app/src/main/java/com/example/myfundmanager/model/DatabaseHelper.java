@@ -1,8 +1,13 @@
+package com.example.myfundmanager.model;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.example.myfundmanager.model.Stock;
+import com.example.myfundmanager.model.User;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "StockApp.db";
@@ -17,6 +22,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "stock_quantity INTEGER," +
             "stock_invest_date TEXT" +
             ")";
+
+    // User 중복조회
+
+    public boolean checkUsernameExists(String username) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM Users WHERE username=?", new String[]{username});
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
+
+        return exists;
+    }
 
     // Stock 테이블 생성 쿼리
     private static final String SQL_CREATE_STOCK_TABLE = "CREATE TABLE Stocks (" +
@@ -46,9 +62,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put("username", user.getUsername());
         values.put("password", user.getPassword());
-        values.put("stock_id", user.getStock().getId());
-        values.put("stock_quantity", user.getStockQuantity());
-        values.put("stock_invest_date", user.getStockInvestDate());
+        if(user.getStock() == null){
+            values.put("stock_id", -1);
+            values.put("stock_quantity", -1);
+            values.put("stock_invest_date", -1);
+        }else {
+            values.put("stock_id", user.getStock().getId());
+            values.put("stock_quantity", user.getStockQuantity());
+            values.put("stock_invest_date", user.getStockInvestDate());
+        }
         long result = db.insert("Users", null, values);
         db.close();
         return result;

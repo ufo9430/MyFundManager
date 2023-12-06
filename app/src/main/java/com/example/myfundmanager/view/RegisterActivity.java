@@ -10,12 +10,16 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myfundmanager.R;
+import com.example.myfundmanager.model.DatabaseHelper;
+import com.example.myfundmanager.model.Stock;
 import com.example.myfundmanager.model.User;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText editTextUsername;
     private EditText editTextPassword;
+
+    DatabaseHelper databaseHelper = new DatabaseHelper(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +37,16 @@ public class RegisterActivity extends AppCompatActivity {
                 String password = editTextPassword.getText().toString().trim();
 
                 if (!username.isEmpty() && !password.isEmpty()) {
-                    User user = new User(username,password);
+                    User user = new User(username,password,new Stock(),-1,"");
                     // Perform actions with the registered user (e.g., store in database)
-
-                    Toast.makeText(RegisterActivity.this, "회원가입을 완료했습니다.", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                    startActivity(intent);
-
+                    if(databaseHelper.checkUsernameExists(user.getUsername())){
+                        databaseHelper.addUser(user);
+                        Toast.makeText(RegisterActivity.this, "회원가입을 완료했습니다.", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }else{
+                        Toast.makeText(RegisterActivity.this, "중복된 아이디입니다.", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(RegisterActivity.this, "아이디와 비밀번호를 입력해 주세요.", Toast.LENGTH_SHORT).show();
                 }

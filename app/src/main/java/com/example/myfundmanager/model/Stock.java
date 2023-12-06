@@ -6,4 +6,15 @@ public class Stock {
     private double currentPrice; // Stock의 현재 가격
 
     // 생성자, Getter 및 Setter 메서드 작성
+    public int getId() {
+        return id;
+    }
+
+    public String getStockName() {
+        return stockName;
+    }
+
+    public double getCurrentPrice() {
+        return currentPrice;
+    }
 }

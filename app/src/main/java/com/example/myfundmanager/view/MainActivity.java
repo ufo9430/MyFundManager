@@ -4,10 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 
 import com.example.myfundmanager.R;
+import com.example.myfundmanager.model.DatabaseHelper;
 
 public class MainActivity extends AppCompatActivity {
 

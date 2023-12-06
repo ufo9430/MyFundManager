@@ -9,4 +9,37 @@ public class User {
     private String stockInvestDate; // Stock 투자 날짜
 
     // 생성자, Getter 및 Setter 메서드 작성
+
+
+    public User(String username, String password, Stock stock, int stockQuantity, String stockInvestDate) {
+        this.username = username;
+        this.password = password;
+        this.stock = stock;
+        this.stockQuantity = stockQuantity;
+        this.stockInvestDate = stockInvestDate;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Stock getStock() {
+        return stock;
+    }
+
+    public int getStockQuantity() {
+        return stockQuantity;
+    }
+
+    public String  getStockInvestDate() {
+        return stockInvestDate;
+    }
 }
