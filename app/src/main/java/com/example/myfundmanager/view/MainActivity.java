@@ -20,6 +20,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Button button_login = findViewById(R.id.link_login);
+        Button button_register = findViewById(R.id.link_register);
+        Button button_check = findViewById(R.id.link_check);
+        Button button_deposit = findViewById(R.id.link_deposit);
+        Button button_withdraw = findViewById(R.id.link_withdraw);
 
         button_login.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -29,6 +33,13 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-
+        button_register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(MainActivity.this, RegisterActivity.class);
+                startActivity(myIntent);
+                finish();
+            }
+        });
     }
 }

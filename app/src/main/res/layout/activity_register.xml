@@ -7,18 +7,24 @@
         android:id="@+id/usernameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_above="@id/passwordEditText"
         android:hint="가입자명"
+        android:padding="16dp" />
+
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/registerButton"
+        android:layout_marginBottom="40dp"
+        android:hint="비밀번호"
         android:padding="16dp" />
 
     <Button
         android:id="@+id/registerButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/usernameEditText"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="156dp"
-        android:layout_marginTop="32dp"
+        android:layout_centerInParent="true"
         android:text="회원 등록" />
 
 </RelativeLayout>

@@ -1,32 +1,9 @@
 package com.example.myfundmanager.model;
 
 public class Stock {
-    private int priceId;
+    private int id;
     private String stockName;
-    private double price;
-    private String priceDate;
+    private double currentPrice; // Stock의 현재 가격
 
-    public Stock(int priceId, String stockName, double price, String priceDate) {
-        this.priceId = priceId;
-        this.stockName = stockName;
-        this.price = price;
-        this.priceDate = priceDate;
-    }
-
-    public int getPriceId() {
-        return priceId;
-    }
-
-    public String getStockName() {
-        return stockName;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public String getPriceDate() {
-        return priceDate;
-    }
-
+    // 생성자, Getter 및 Setter 메서드 작성
 }
