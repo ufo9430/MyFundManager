@@ -26,8 +26,8 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        editTextUsername = findViewById(R.id.usernameEditText);
-        editTextPassword = findViewById(R.id.passwordEditText);
+        editTextUsername = findViewById(R.id.loginUsernameText);
+        editTextPassword = findViewById(R.id.loginPasswordText);
         Button buttonRegister = findViewById(R.id.registerButton);
 
         buttonRegister.setOnClickListener(new View.OnClickListener() {
@@ -37,9 +37,11 @@ public class RegisterActivity extends AppCompatActivity {
                 String password = editTextPassword.getText().toString().trim();
 
                 if (!username.isEmpty() && !password.isEmpty()) {
-                    User user = new User(username,password,new Stock(),-1,"");
+                    User user = new User();
+                    user.setUsername(username);
+                    user.setPassword(password);
                     // Perform actions with the registered user (e.g., store in database)
-                    if(databaseHelper.checkUsernameExists(user.getUsername())){
+                    if(!databaseHelper.checkUsernameExists(user.getUsername())){
                         databaseHelper.addUser(user);
                         Toast.makeText(RegisterActivity.this, "회원가입을 완료했습니다.", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(RegisterActivity.this, MainActivity.class);

@@ -11,13 +11,27 @@ public class User {
     // 생성자, Getter 및 Setter 메서드 작성
 
 
-    public User(String username, String password, Stock stock, int stockQuantity, String stockInvestDate) {
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public User() {
+    }
+
+    public void setUsername(String username) {
         this.username = username;
+    }
+
+    public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setStock(Stock stock, int stockQuantity, String stockInvestDate) {
         this.stock = stock;
         this.stockQuantity = stockQuantity;
         this.stockInvestDate = stockInvestDate;
     }
+
 
     public int getId() {
         return id;

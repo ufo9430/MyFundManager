@@ -4,15 +4,15 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/usernameEditText"
+        android:id="@+id/loginUsernameText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/passwordEditText"
+        android:layout_above="@id/loginPasswordText"
         android:hint="가입자명"
         android:padding="16dp" />
 
     <EditText
-        android:id="@+id/passwordEditText"
+        android:id="@+id/loginPasswordText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/registerButton"
@@ -26,5 +26,15 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="회원 등록" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="회원 등록"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="50dp"
+        android:layout_above="@+id/loginUsernameText"
+        android:textSize="24sp" />
 
 </RelativeLayout>

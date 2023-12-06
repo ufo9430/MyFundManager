@@ -1,10 +1,13 @@
 package com.example.myfundmanager.model;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Debug;
+import android.util.Log;
 
 import com.example.myfundmanager.model.Stock;
 import com.example.myfundmanager.model.User;
@@ -29,8 +32,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM Users WHERE username=?", new String[]{username});
         boolean exists = cursor.getCount() > 0;
-        cursor.close();
+        Log.v("test",Integer.toString(cursor.getCount()));
+        return exists;
+    }
 
+    // User 로그인 조회
+
+    @SuppressLint("Range")
+    public boolean checkUserPassword(String username, String password) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM Users WHERE username=? AND password=?", new String[]{username, password});
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
         return exists;
     }
 
@@ -62,19 +75,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put("username", user.getUsername());
         values.put("password", user.getPassword());
-        if(user.getStock() == null){
-            values.put("stock_id", -1);
-            values.put("stock_quantity", -1);
-            values.put("stock_invest_date", -1);
-        }else {
-            values.put("stock_id", user.getStock().getId());
-            values.put("stock_quantity", user.getStockQuantity());
-            values.put("stock_invest_date", user.getStockInvestDate());
-        }
+        values.put("stock_id", -1);
+        values.put("stock_quantity", -1);
+        values.put("stock_invest_date", -1);
         long result = db.insert("Users", null, values);
         db.close();
         return result;
     }
+
+    // username을 기반으로 User 객체 반환
+    @SuppressLint("Range")
+    public User getUserByUsername(String username) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        User user = null;
+        Cursor cursor = db.rawQuery("SELECT * FROM Users WHERE username=?", new String[]{username});
+        if (cursor != null && cursor.moveToFirst()) {
+            user = new User();
+            user.setId(cursor.getInt(cursor.getColumnIndex("id")));
+            user.setUsername(cursor.getString(cursor.getColumnIndex("username")));
+            user.setPassword(cursor.getString(cursor.getColumnIndex("password")));
+            // 추가적으로 필요한 정보 설정 가능
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        return user;
+    }
+
+    // ----------------STOCK------------------
 
     // Stock 추가
     public long addStock(Stock stock) {
