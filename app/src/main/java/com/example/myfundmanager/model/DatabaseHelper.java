@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.example.myfundmanager.MyApplication;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,15 +23,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_ID = "_id";
     private static final String COLUMN_DATE = "date";
     private static final String COLUMN_PRICE = "price";
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     // User 테이블 생성 쿼리
     private static final String SQL_CREATE_USER_TABLE = "CREATE TABLE Users (" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT," +
             "username TEXT," +
             "password TEXT," +
-            "stock_id INTEGER," +
-            "stock_quantity INTEGER," +
-            "stock_invest_date TEXT" +
+            "initialinvest DECIMAL," +
+            "currentinvest DECIMAL," +
+            "investdate TEXT" +
             ")";
 
     private static final String CREATE_FUND_TABLE = "CREATE TABLE " + TABLE_FUND + "(" +
@@ -85,11 +88,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public long addUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        Calendar cal = MyApplication.getFixedCalendar();
+
         values.put("username", user.getUsername());
         values.put("password", user.getPassword());
-        values.put("stock_id", -1);
-        values.put("stock_quantity", -1);
-        values.put("stock_invest_date", -1);
+        values.put("initialinvest", 0);
+        values.put("currentinvest", 0);
+        values.put("investdate", dateFormat.format(cal.getTime()));
         long result = db.insert("Users", null, values);
         db.close();
         return result;
@@ -114,14 +119,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return user;
     }
 
+    //id로 user 검색
+    @SuppressLint("Range")
+    public User getUserById(int userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        User user = null;
+        Cursor cursor = db.rawQuery("SELECT * FROM Users WHERE id=?", new String[]{String.valueOf(userId)});
+        if (cursor != null && cursor.moveToFirst()) {
+            user = new User();
+            user.setId(cursor.getInt(cursor.getColumnIndex("id")));
+            user.setUsername(cursor.getString(cursor.getColumnIndex("username")));
+            user.setPassword(cursor.getString(cursor.getColumnIndex("password")));
+            // 필요한 정보 설정 가능
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        return user;
+    }
+
     // User 수정
     public int updateUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("username", user.getUsername());
         values.put("password", user.getPassword());
-        values.put("stock_quantity", user.getDeposit());
-        values.put("stock_invest_date", user.getInvestDate());
+        values.put("initialinvest", user.getInitialInvestment());
+        values.put("currentinvest", user.getCurrentInvestment());
+        values.put("investdate", user.getInvestDate());
+
         int result = db.update("Users", values, "id=?", new String[]{String.valueOf(user.getId())});
         db.close();
         return result;
@@ -136,8 +162,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void updateFundPrice(double newPrice) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        Date currentDate = Calendar.getInstance().getTime();
+        Date currentDate = MyApplication.getFixedCalendar().getTime();
         String formattedDate = dateFormat.format(currentDate);
 
         values.put(COLUMN_DATE, formattedDate);

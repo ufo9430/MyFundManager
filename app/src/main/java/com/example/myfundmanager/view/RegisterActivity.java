@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myfundmanager.R;
 import com.example.myfundmanager.model.DatabaseHelper;
-import com.example.myfundmanager.model.Stock;
 import com.example.myfundmanager.model.User;
 
 public class RegisterActivity extends AppCompatActivity {

@@ -26,16 +26,23 @@ public class User {
         this.password = password;
     }
 
+    // 입금,출금 시 호출
     public void newInvestment(double initialInvestment, String InvestDate) {
         this.initialInvestment = initialInvestment;
+        this.currentInvestment = initialInvestment;
         this.InvestDate = InvestDate;
     }
 
+    // 펀드 수익 변화 시 호출
     public void updateInvestment(double updatedCost, String InvestDate){
         this.currentInvestment = updatedCost;
         this.InvestDate = InvestDate;
     }
 
+
+    public double getInitialInvestment() {
+        return initialInvestment;
+    }
 
     public int getId() {
         return id;
