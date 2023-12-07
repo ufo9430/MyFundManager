@@ -13,15 +13,27 @@ import android.widget.Toast;
 import com.example.myfundmanager.R;
 import com.example.myfundmanager.model.DatabaseHelper;
 
+import java.util.Calendar;
+
 public class MainActivity extends AppCompatActivity {
 
-    private final long finishtimeed = 1000;
-    private long presstime = 0;
+    String startDate = "20231208080000";
+    void setCustomdate(){
+        Calendar cal = Calendar.getInstance();
 
+        cal.set(Calendar. YEAR, Integer.parseInt(startDate.substring(0, 4)));
+        cal.set(Calendar. MONTH, Integer. parseInt(startDate.substring (4, 6)) - 1);
+        cal.set(Calendar. DATE, Integer.parseInt(startDate.substring (6, 8)));
+        cal.set(Calendar. HOUR, Integer.parseInt (startDate.substring (8, 10)));
+        cal.set(Calendar. MINUTE, Integer.parseInt(startDate.substring(10, 12)));
+        cal.set(Calendar.SECOND, Integer.parseInt (startDate.substring(12, 14)));
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        setCustomdate();
 
         Button button_login = findViewById(R.id.link_login);
         Button button_logout = findViewById(R.id.link_logout);
@@ -75,15 +87,7 @@ public class MainActivity extends AppCompatActivity {
         button_check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(getIntent().getStringExtra("username") == null){
-                    Toast.makeText(MainActivity.this,"로그인을 해주세요.", Toast.LENGTH_SHORT).show();
-                }else{
-                    if(getIntent().getSerializableExtra("Stock") == null){
-                        Toast.makeText(MainActivity.this,"보유 펀드가 없습니다.", Toast.LENGTH_SHORT).show();
-                    }else{
-                        Toast.makeText(MainActivity.this,"in progress", Toast.LENGTH_SHORT).show();
-                    }
-                }
+
             }
         });
     }

@@ -6,15 +6,21 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Debug;
 import android.util.Log;
 
-import com.example.myfundmanager.model.Stock;
-import com.example.myfundmanager.model.User;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "StockApp.db";
+    private static final String DATABASE_NAME = "Fund.db";
     private static final int DATABASE_VERSION = 1;
+
+    private static final String TABLE_FUND = "funds";
+    private static final String COLUMN_ID = "_id";
+    private static final String COLUMN_DATE = "date";
+    private static final String COLUMN_PRICE = "price";
 
     // User 테이블 생성 쿼리
     private static final String SQL_CREATE_USER_TABLE = "CREATE TABLE Users (" +
@@ -24,6 +30,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "stock_id INTEGER," +
             "stock_quantity INTEGER," +
             "stock_invest_date TEXT" +
+            ")";
+
+    private static final String CREATE_FUND_TABLE = "CREATE TABLE " + TABLE_FUND + "(" +
+            COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            COLUMN_DATE + " TEXT, " +
+            COLUMN_PRICE + " REAL" +
             ")";
 
     // User 중복조회
@@ -61,7 +73,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_USER_TABLE);
-        db.execSQL(SQL_CREATE_STOCK_TABLE);
+        db.execSQL(CREATE_FUND_TABLE);
     }
 
     @Override
@@ -102,40 +114,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return user;
     }
 
-    // ----------------STOCK------------------
-
-    // Stock 추가
-    public long addStock(Stock stock) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("stock_name", stock.getStockName());
-        values.put("current_price", stock.getCurrentPrice());
-        long result = db.insert("Stocks", null, values);
-        db.close();
-        return result;
-    }
-
     // User 수정
     public int updateUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("username", user.getUsername());
         values.put("password", user.getPassword());
-        values.put("stock_id", user.getStock().getId());
-        values.put("stock_quantity", user.getStockQuantity());
-        values.put("stock_invest_date", user.getStockInvestDate());
+        values.put("stock_quantity", user.getDeposit());
+        values.put("stock_invest_date", user.getInvestDate());
         int result = db.update("Users", values, "id=?", new String[]{String.valueOf(user.getId())});
-        db.close();
-        return result;
-    }
-
-    // Stock 수정
-    public int updateStock(Stock stock) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("stock_name", stock.getStockName());
-        values.put("current_price", stock.getCurrentPrice());
-        int result = db.update("Stocks", values, "id=?", new String[]{String.valueOf(stock.getId())});
         db.close();
         return result;
     }
@@ -146,9 +133,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.rawQuery("SELECT * FROM Users", null);
     }
 
-    // 모든 Stock 조회
-    public Cursor getAllStocks() {
+    public void updateFundPrice(double newPrice) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        Date currentDate = Calendar.getInstance().getTime();
+        String formattedDate = dateFormat.format(currentDate);
+
+        values.put(COLUMN_DATE, formattedDate);
+        values.put(COLUMN_PRICE, newPrice);
+
+        db.insert(TABLE_FUND, null, values);
+        db.close();
+    }
+
+    @SuppressLint("Range")
+    public double getFundPriceForDate(String date) {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.rawQuery("SELECT * FROM Stocks", null);
+        double fundPrice = 0.0;
+        Cursor cursor = db.query(
+                TABLE_FUND,
+                new String[]{COLUMN_PRICE},
+                COLUMN_DATE + "=?",
+                new String[]{date},
+                null,
+                null,
+                null
+        );
+
+        if (cursor != null && cursor.moveToFirst()) {
+            fundPrice = cursor.getDouble(cursor.getColumnIndex(COLUMN_PRICE));
+            cursor.close();
+        }
+        db.close();
+
+        return fundPrice;
     }
 }
