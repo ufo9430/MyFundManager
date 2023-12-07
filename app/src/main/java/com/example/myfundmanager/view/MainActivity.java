@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         Button button_check = findViewById(R.id.link_check);
         Button button_deposit = findViewById(R.id.link_deposit);
         Button button_withdraw = findViewById(R.id.link_withdraw);
+        Button button_updatecal = findViewById(R.id.updatecal);
 
         TextView accessedUser = findViewById(R.id.accessedUser);
         TextView fundInfo = findViewById(R.id.fundInfo);
@@ -96,7 +97,29 @@ public class MainActivity extends AppCompatActivity {
         button_check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(getIntent().getIntExtra("userid",-1) != -1) {
+                    Intent intent = new Intent(MainActivity.this, CheckActivity.class);
+                    intent.putExtra("userid",currentUser.getId());
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(MainActivity.this, "로그인을 해주세요.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
+        button_updatecal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cal.add(Calendar.DATE,1);
+                MyApplication.setFixedCalendar(MainActivity.this,cal);
+
+
+
+                Intent intent = getIntent();
+                finish();
+                overridePendingTransition(0,0);
+                startActivity(intent);
+                overridePendingTransition(0,0);
             }
         });
     }

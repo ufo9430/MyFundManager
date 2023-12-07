@@ -1,6 +1,7 @@
 package com.example.myfundmanager;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -28,10 +29,10 @@ public class MyApplication extends Application {
         return fixedCalendar;
     }
 
-    public void setFixedCalendar(Calendar calendar) {
+    public static void setFixedCalendar(Context context, Calendar calendar) {
         fixedCalendar = calendar;
         // 수정된 날짜를 SharedPreferences에 저장
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(MyApplication.this).edit();
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         editor.putLong(KEY_FIXED_DATE, calendar.getTimeInMillis());
         editor.apply();
     }
