@@ -173,9 +173,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     @SuppressLint("Range")
-    public double getFundPriceForDate(String date) {
+    public double getFundPriceForDate(Calendar cal) {
         SQLiteDatabase db = this.getReadableDatabase();
         double fundPrice = 0.0;
+        String date = dateFormat.format(cal.getTime());
         Cursor cursor = db.query(
                 TABLE_FUND,
                 new String[]{COLUMN_PRICE},

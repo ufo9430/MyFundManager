@@ -20,8 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="투자금액"
-        android:textSize="25dp"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textSize="25dp" />
 
     <TextView
         android:id="@+id/check_currentinvest"

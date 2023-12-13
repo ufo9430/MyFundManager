@@ -25,9 +25,9 @@ public class CheckActivity extends AppCompatActivity {
         User currentUser = databaseHelper.getUserById(getIntent().getIntExtra("userid",-1));
 
         TextView checkUsername = findViewById(R.id.check_username);
+        TextView checkUserGain = findViewById(R.id.check_usergain);
         TextView checkInitialInvest = findViewById(R.id.check_initialinvest);
         TextView checkCurrentInvest = findViewById(R.id.check_currentinvest);
-        TextView checkUserGain = findViewById(R.id.check_usergain);
 
         double initinv = currentUser.getInitialInvestment();
         double currinv = currentUser.getCurrentInvestment();

@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
             accessedUser.setText("접속 회원 : " + currentUser.getUsername());
         }
 
-        fundInfo.setText("총 펀드 투자액 : "+databaseHelper.getFundPriceForDate(format.format(cal.getInstance().getTime())));
+        fundInfo.setText("총 펀드 투자액 : "+databaseHelper.getFundPriceForDate(cal));
 
         dateInfo.setText("현재 날짜 : "+format.format(cal.getTime()));
 
@@ -107,13 +107,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        button_deposit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(getIntent().getIntExtra("userid",-1) != -1) {
+                    Intent intent = new Intent(MainActivity.this, DepositActivity.class);
+                    intent.putExtra("userid",currentUser.getId());
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(MainActivity.this, "로그인을 해주세요.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         button_updatecal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cal.add(Calendar.DATE,1);
                 MyApplication.setFixedCalendar(MainActivity.this,cal);
-
-
 
                 Intent intent = getIntent();
                 finish();
