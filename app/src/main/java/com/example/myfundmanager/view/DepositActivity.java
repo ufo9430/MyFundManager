@@ -58,10 +58,12 @@ public class DepositActivity extends AppCompatActivity {
 
                 currentUser.updateInvestment(currentUser.getCurrentInvestment() + Math.round(deposit),
                         todaystr);
-                db.updateUser(currentUser);
-
                 Log.w("test","입금액 : "+deposit);
                 Log.w("test","사용자 돈 : " + currentUser.getCurrentInvestment() + "펀드돈 : " + db.getFundPriceForDate(cal));
+                db.updateUser(currentUser);
+                Log.w("test","입금후");
+                Log.w("test","사용자 돈 : " + currentUser.getCurrentInvestment() + "펀드돈 : " + db.getFundPriceForDate(cal));
+
 
 
                 Toast.makeText(DepositActivity.this, "입금을 완료했습니다.", Toast.LENGTH_SHORT).show();

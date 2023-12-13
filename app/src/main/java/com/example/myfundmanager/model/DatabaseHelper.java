@@ -165,8 +165,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Date currentDate = MyApplication.getFixedCalendar().getTime();
         String formattedDate = dateFormat.format(currentDate);
 
-        values.put(COLUMN_DATE, formattedDate);
-        values.put(COLUMN_PRICE, newPrice);
+        // Check if the date exists in the database
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_FUND + " WHERE " + COLUMN_DATE + "=?", new String[]{formattedDate});
+        if (cursor.getCount() > 0) {
+            // Update the existing record
+            values.put(COLUMN_PRICE, newPrice);
+            db.update(TABLE_FUND, values, COLUMN_DATE + "=?", new String[]{formattedDate});
+        } else {
+            // Insert a new record if the date does not exist
+            values.put(COLUMN_DATE, formattedDate);
+            values.put(COLUMN_PRICE, newPrice);
+            db.insert(TABLE_FUND, null, values);
+        }
 
         db.insert(TABLE_FUND, null, values);
         db.close();

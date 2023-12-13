@@ -16,6 +16,9 @@ public class User {
     }
 
     public User() {
+        initialInvestment = 0;
+        currentInvestment = 0;
+        InvestDate = "현재 입금을 하지 않았습니다.";
     }
 
     public void setUsername(String username) {
@@ -27,9 +30,9 @@ public class User {
     }
 
     // 입금,출금 시 호출
-    public void newInvestment(double initialInvestment, String InvestDate) {
-        this.initialInvestment = initialInvestment;
-        this.currentInvestment = initialInvestment;
+    public void newInvestment(double Investment, String InvestDate) {
+        this.initialInvestment = Investment;
+        this.currentInvestment = Investment;
         this.InvestDate = InvestDate;
     }
 

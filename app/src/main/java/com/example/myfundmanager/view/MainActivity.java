@@ -23,8 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-    void init(){
-    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
