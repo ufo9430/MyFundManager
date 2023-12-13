@@ -39,7 +39,6 @@ public class User {
         this.InvestDate = InvestDate;
     }
 
-
     public double getInitialInvestment() {
         return initialInvestment;
     }

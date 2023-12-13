@@ -26,6 +26,7 @@
         <activity android:name=".view.RegisterActivity"></activity>
         <activity android:name=".view.DepositActivity"></activity>
         <activity android:name=".view.CheckActivity"></activity>
+        <activity android:name=".view.WithdrawActivity"></activity>
     </application>
 
 </manifest>

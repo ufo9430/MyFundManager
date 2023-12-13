@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/withdraw_currentinvest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/withdraw_depositvalue"
+        android:text="현재금액"
+        android:textAlignment="center"
+        android:textSize="25dp" />
+
+    <EditText
+        android:id="@+id/withdraw_depositvalue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="30px"
+        android:ems="10"
+        android:hint="출금액"
+        android:inputType="text"
+        android:textAlignment="center"
+        android:textSize="25dp" />
+
+    <Button
+        android:id="@+id/withdraw_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/withdraw_depositvalue"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30px"
+        android:text="출금확인"
+        android:textSize="20dp" />
+</RelativeLayout>

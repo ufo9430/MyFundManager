@@ -17,21 +17,18 @@ import com.example.myfundmanager.model.User;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
     DatabaseHelper databaseHelper = new DatabaseHelper(this);
-    SimpleDateFormat format = new SimpleDateFormat();
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     void init(){
-        format.applyPattern("yyyy-MM-dd");
-        databaseHelper.updateFundPrice(0);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        init();
 
         User currentUser = databaseHelper.getUserById(getIntent().getIntExtra("userid",-1));
 
@@ -120,11 +117,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        button_withdraw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(getIntent().getIntExtra("userid",-1) != -1) {
+                    Intent intent = new Intent(MainActivity.this, WithdrawActivity.class);
+                    intent.putExtra("userid",currentUser.getId());
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(MainActivity.this, "로그인을 해주세요.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         button_updatecal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                double yesterdayfund = databaseHelper.getFundPriceForDate(cal);
                 cal.add(Calendar.DATE,1);
                 MyApplication.setFixedCalendar(MainActivity.this,cal);
+                databaseHelper.updateFundPrice(yesterdayfund);
 
                 Intent intent = getIntent();
                 finish();
