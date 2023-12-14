@@ -43,7 +43,7 @@ public class CheckActivity extends AppCompatActivity {
         double totfund = db.getFundPriceForDate(cal);
         double currinv = currentUser.getCurrentInvestment();
 
-        checkUsername.setText("\uD83D\uDCC8 "+currentUser.getUsername()+"님의 투자 정보");
+        checkUsername.setText("\uD83D\uDCC8  상세 투자 정보");
         checkTotalFund.setText(parseMoney((int)totfund)+"원");
         checkCurrentInvest.setText(parseMoney((int)currinv)+"원");
         checkUserGain.setText(parseMoney((int)getGain(currinv))+"원");
