@@ -57,10 +57,12 @@
 
         <Button
             android:id="@+id/deposit_submit"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="30px"
             android:layout_marginTop="30px"
+            android:layout_marginRight="30px"
             android:background="@drawable/moneybutton"
             android:fontFamily="@font/notosanskrbold"
             android:text="입금확인"

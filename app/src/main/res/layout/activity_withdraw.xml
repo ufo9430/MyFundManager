@@ -11,7 +11,7 @@
         android:layout_centerInParent="true"
         android:layout_marginBottom="50dp"
         android:fontFamily="@font/notosanskrbold"
-        android:text="펀드 입금"
+        android:text="펀드 출금"
         android:textColor="#000000"
         android:textSize="36sp" />
 
@@ -57,10 +57,12 @@
 
         <Button
             android:id="@+id/withdraw_submit"
-            android:layout_width="200dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="30px"
             android:layout_marginTop="30px"
+            android:layout_marginRight="30px"
             android:background="@drawable/moneybutton"
             android:fontFamily="@font/notosanskrbold"
             android:text="출금확인"
