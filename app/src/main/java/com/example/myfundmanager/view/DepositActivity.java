@@ -1,5 +1,7 @@
 package com.example.myfundmanager.view;
 
+import static com.example.myfundmanager.model.MoneyParser.parseMoney;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,7 +41,7 @@ public class DepositActivity extends AppCompatActivity {
         double currinv = currentUser.getCurrentInvestment();
 
         depositInput.setText("0");
-        depositCurrentInvest.setText("사용자 : "+currentUser.getUsername()+"의 현재 투자 금액 : "+currinv);
+        depositCurrentInvest.setText("현재 투자 금액 : "+parseMoney((int)currinv)+"원");
 
         //입금 버튼 클릭시
         depositSubmit.setOnClickListener(new View.OnClickListener() {
@@ -53,7 +55,7 @@ public class DepositActivity extends AppCompatActivity {
                     String todaystr = dateFormat.format(cal.getTime());
 
                     double oldgain = db.getFundGainForDate(cal);
-                    db.updateFundPrice(oldgain, currentPrice, currentPrice + Math.round(deposit),1);
+                    db.updateFundPrice(oldgain, currentPrice, currentPrice + Math.round(deposit),0);
 
 
                     Log.w("test","입금액 : "+deposit);

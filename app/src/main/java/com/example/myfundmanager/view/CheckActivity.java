@@ -1,5 +1,7 @@
 package com.example.myfundmanager.view;
 
+import static com.example.myfundmanager.model.MoneyParser.parseMoney;
+
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -41,11 +43,11 @@ public class CheckActivity extends AppCompatActivity {
         double initinv = currentUser.getInitialInvestment();
         double currinv = currentUser.getCurrentInvestment();
 
-        checkUsername.setText("사용자 : "+currentUser.getUsername()+"의 투자 정보");
-        checkInitialInvest.setText("초기 투자 금액 : "+initinv);
-        checkCurrentInvest.setText("현재 투자 금액 : "+currinv);
-        checkUserGain.setText("일일 고객 수익 : "+ getGain(currinv));
-        checkFundGain.setText("일일 펀드 수익 : "+ db.getFundGainForDate(cal));
+        checkUsername.setText("\uD83D\uDCC8 "+currentUser.getUsername()+"님의 투자 정보");
+        checkInitialInvest.setText(parseMoney((int)initinv)+"원");
+        checkCurrentInvest.setText(parseMoney((int)currinv)+"원");
+        checkUserGain.setText(parseMoney((int)getGain(currinv))+"원");
+        checkFundGain.setText(parseMoney((int)db.getFundGainForDate(cal))+"원");
 
     }
 }

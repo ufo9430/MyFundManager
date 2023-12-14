@@ -3,39 +3,59 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/loginUsernameText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/loginPasswordText"
-        android:hint="가입자명"
-        android:padding="16dp" />
-
-    <EditText
-        android:id="@+id/loginPasswordText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/loginButton"
-        android:layout_marginBottom="40dp"
-        android:hint="비밀번호"
-        android:inputType="textPassword"
-        android:padding="16dp" />
-
-    <Button
-        android:id="@+id/loginButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="로그인" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="로그인"
+        android:layout_above="@id/check_container"
         android:layout_centerInParent="true"
         android:layout_marginBottom="50dp"
-        android:layout_above="@+id/loginUsernameText"
-        android:textSize="24sp" />
+        android:fontFamily="@font/notosanskrbold"
+        android:text="로그인"
+        android:textColor="#000000"
+        android:textSize="36sp" />
+
+    <LinearLayout
+        android:id="@+id/check_container"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/rectangle"
+        android:elevation="10dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/loginUsernameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:hint="아이디"
+            android:padding="25dp" />
+
+        <EditText
+            android:id="@+id/loginPasswordText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:hint="비밀번호"
+            android:inputType="textPassword"
+            android:padding="25dp" />
+
+        <Button
+            android:id="@+id/loginButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="false"
+            android:layout_centerVertical="false"
+            android:layout_gravity="center_horizontal"
+            android:elevation="5dp"
+            android:fontFamily="@font/notosanskrbold"
+            android:text="로그인" />
+
+    </LinearLayout>
 
 </RelativeLayout>

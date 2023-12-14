@@ -1,5 +1,7 @@
 package com.example.myfundmanager.view;
 
+import static com.example.myfundmanager.model.MoneyParser.parseMoney;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 import com.example.myfundmanager.MyApplication;
 import com.example.myfundmanager.R;
 import com.example.myfundmanager.model.DatabaseHelper;
+import com.example.myfundmanager.model.MoneyParser;
 import com.example.myfundmanager.model.User;
 
 import java.text.SimpleDateFormat;
@@ -50,19 +53,21 @@ public class MainActivity extends AppCompatActivity {
         Button button_updatecal = findViewById(R.id.updatecal);
 
         TextView accessedUser = findViewById(R.id.accessedUser);
-        TextView fundInfo = findViewById(R.id.fundInfo);
+        TextView userInfo = findViewById(R.id.userinfo);
         TextView dateInfo = findViewById(R.id.dateInfo);
 
 
         if(getIntent().getIntExtra("userid",-1) == -1){
-            accessedUser.setText("접속 회원 : 접속중이 아닙니다.");
+            userInfo.setText("0원");
+            accessedUser.setText("로그인을 해주세요.");
         }else{
-            accessedUser.setText("접속 회원 : " + currentUser.getUsername());
+            int money = (int)currentUser.getCurrentInvestment();
+            userInfo.setText("현재 투자액 : " + parseMoney(money) +"원");
+            accessedUser.setText(currentUser.getUsername()+" 님의 투자 정보");
         }
 
-        fundInfo.setText("총 펀드 투자액 : "+ db.getFundPriceForDate(cal));
 
-        dateInfo.setText("현재 날짜 : "+format.format(cal.getTime()));
+        dateInfo.setText(format.format(cal.getTime())+" 기준");
 
         button_login.setOnClickListener(new View.OnClickListener(){
             @Override
