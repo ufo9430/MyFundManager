@@ -35,16 +35,16 @@ public class CheckActivity extends AppCompatActivity {
         User currentUser = databaseHelper.getUserById(getIntent().getIntExtra("userid",-1));
 
         TextView checkUsername = findViewById(R.id.check_username);
-        TextView checkInitialInvest = findViewById(R.id.check_initialinvest);
+        TextView checkTotalFund = findViewById(R.id.check_totalfunds);
         TextView checkCurrentInvest = findViewById(R.id.check_currentinvest);
         TextView checkUserGain = findViewById(R.id.check_usergain);
         TextView checkFundGain = findViewById(R.id.check_fundgain);
 
-        double initinv = currentUser.getInitialInvestment();
+        double totfund = db.getFundPriceForDate(cal);
         double currinv = currentUser.getCurrentInvestment();
 
         checkUsername.setText("\uD83D\uDCC8 "+currentUser.getUsername()+"님의 투자 정보");
-        checkInitialInvest.setText(parseMoney((int)initinv)+"원");
+        checkTotalFund.setText(parseMoney((int)totfund)+"원");
         checkCurrentInvest.setText(parseMoney((int)currinv)+"원");
         checkUserGain.setText(parseMoney((int)getGain(currinv))+"원");
         checkFundGain.setText(parseMoney((int)db.getFundGainForDate(cal))+"원");

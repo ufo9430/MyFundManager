@@ -36,15 +36,15 @@
             android:layout_marginTop="30dp"
             android:fontFamily="@font/notosanskrbold"
             android:paddingLeft="10dp"
-            android:text="투자 금액" />
+            android:text="전체 펀드 금액" />
 
         <TextView
-            android:id="@+id/check_initialinvest"
+            android:id="@+id/check_totalfunds"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/notosanskrbold"
             android:paddingRight="10dp"
-            android:text="투자금액"
+            android:text="총 펀드 금액"
             android:textAlignment="viewEnd"
             android:textColor="#000"
             android:textSize="25dp" />
@@ -55,15 +55,15 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/notosanskrbold"
             android:paddingLeft="10dp"
-            android:text="현재 금액" />
+            android:text="고객 보유 금액" />
 
         <TextView
             android:id="@+id/check_currentinvest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/notosanskrbold"
-            android:text="현재금액"
             android:paddingRight="10dp"
+            android:text="고객 보유 금액"
             android:textAlignment="viewEnd"
             android:textColor="#000"
             android:textSize="25dp" />
