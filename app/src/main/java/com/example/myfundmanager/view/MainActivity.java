@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
             accessedUser.setText("로그인을 해주세요.");
         }else{
             int money = (int)currentUser.getCurrentInvestment();
-            userInfo.setText("현재 투자액 : " + parseMoney(money) +"원");
+            userInfo.setText(parseMoney(money) +"원");
             accessedUser.setText(currentUser.getUsername()+" 님의 투자 정보");
         }
 
