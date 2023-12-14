@@ -2,9 +2,9 @@ package com.example.myfundmanager.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,20 +18,28 @@ import com.example.myfundmanager.model.User;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
-    DatabaseHelper databaseHelper = new DatabaseHelper(this);
+    DatabaseHelper db = new DatabaseHelper(this);
+    Calendar cal = MyApplication.getFixedCalendar();
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
+
+    public void updateFund(double fundPrice){
+        Random r = new Random();
+        double percent = -30+r.nextInt(60);
+        double oldgain = db.getFundGainForDate(cal);
+        db.updateInvestmentsByPercentage(percent);
+        db.updateFundPrice(oldgain, fundPrice, Math.round(fundPrice + fundPrice * (percent/100)),1);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        User currentUser = databaseHelper.getUserById(getIntent().getIntExtra("userid",-1));
-
-        Calendar cal = MyApplication.getFixedCalendar();
+        User currentUser = db.getUserById(getIntent().getIntExtra("userid",-1));
 
         Button button_login = findViewById(R.id.link_login);
         Button button_logout = findViewById(R.id.link_logout);
@@ -52,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
             accessedUser.setText("접속 회원 : " + currentUser.getUsername());
         }
 
-        fundInfo.setText("총 펀드 투자액 : "+databaseHelper.getFundPriceForDate(cal));
+        fundInfo.setText("총 펀드 투자액 : "+ db.getFundPriceForDate(cal));
 
         dateInfo.setText("현재 날짜 : "+format.format(cal.getTime()));
 
@@ -131,10 +139,12 @@ public class MainActivity extends AppCompatActivity {
         button_updatecal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                double yesterdayfund = databaseHelper.getFundPriceForDate(cal);
+                double oldfund = db.getFundPriceForDate(cal);
                 cal.add(Calendar.DATE,1);
                 MyApplication.setFixedCalendar(MainActivity.this,cal);
-                databaseHelper.updateFundPrice(yesterdayfund);
+
+                Log.w("test","fund : "+oldfund);
+                updateFund(oldfund);
 
                 Intent intent = getIntent();
                 finish();

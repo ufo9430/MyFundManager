@@ -41,37 +41,41 @@ public class DepositActivity extends AppCompatActivity {
         depositInput.setText("0");
         depositCurrentInvest.setText("사용자 : "+currentUser.getUsername()+"의 현재 투자 금액 : "+currinv);
 
-
         //입금 버튼 클릭시
         depositSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try{
+                    int deposit = Integer.parseInt(String.valueOf(depositInput.getText()));
+                    double currentPrice = db.getFundPriceForDate(cal);
 
-                int deposit = Integer.parseInt(String.valueOf(depositInput.getText()));
-                double currentPrice = db.getFundPriceForDate(cal);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                    String todaystr = dateFormat.format(cal.getTime());
 
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                String todaystr = dateFormat.format(cal.getTime());
-
-
-                db.updateFundPrice(currentPrice + Math.round(deposit));
-
-                currentUser.updateInvestment(currentUser.getCurrentInvestment() + Math.round(deposit),
-                        todaystr);
-                Log.w("test","입금액 : "+deposit);
-                Log.w("test","사용자 돈 : " + currentUser.getCurrentInvestment() + "펀드돈 : " + db.getFundPriceForDate(cal));
-                db.updateUser(currentUser);
-                Log.w("test","입금후");
-                Log.w("test","사용자 돈 : " + currentUser.getCurrentInvestment() + "펀드돈 : " + db.getFundPriceForDate(cal));
+                    double oldgain = db.getFundGainForDate(cal);
+                    db.updateFundPrice(oldgain, currentPrice, currentPrice + Math.round(deposit),1);
 
 
+                    Log.w("test","입금액 : "+deposit);
+                    Log.w("test","사용자 돈 : " + currentUser.getCurrentInvestment() + "펀드돈 : " + db.getFundPriceForDate(cal));
+                    double usermoney = currentUser.getCurrentInvestment();
+                    currentUser.newInvestment(usermoney+ Math.round(deposit),
+                            todaystr);
+                    db.updateUser(currentUser);
+                    Log.w("test","입금후");
+                    Log.w("test","사용자 돈 : " + currentUser.getCurrentInvestment() + "펀드돈 : " + db.getFundPriceForDate(cal));
 
-                Toast.makeText(DepositActivity.this, "입금을 완료했습니다.", Toast.LENGTH_SHORT).show();
 
-                //새로고침
-                Intent intent = new Intent(DepositActivity.this, MainActivity.class);
-                intent.putExtra("userid",currentUser.getId());
-                startActivity(intent);
+
+                    Toast.makeText(DepositActivity.this, "입금을 완료했습니다.", Toast.LENGTH_SHORT).show();
+
+                    //새로고침
+                    Intent intent = new Intent(DepositActivity.this, MainActivity.class);
+                    intent.putExtra("userid",currentUser.getId());
+                    startActivity(intent);
+                }catch(Exception e){
+                    Toast.makeText(DepositActivity.this, "입력값은 숫자로 입력해 주세요.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

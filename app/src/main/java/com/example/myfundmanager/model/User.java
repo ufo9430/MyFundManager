@@ -46,6 +46,18 @@ public class User {
         return initialInvestment;
     }
 
+    public void setInitialInvestment(double initialInvestment) {
+        this.initialInvestment = initialInvestment;
+    }
+
+    public void setCurrentInvestment(double currentInvestment) {
+        this.currentInvestment = currentInvestment;
+    }
+
+    public void setInvestDate(String investDate) {
+        InvestDate = investDate;
+    }
+
     public int getId() {
         return id;
     }

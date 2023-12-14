@@ -46,7 +46,37 @@ public class WithdrawActivity extends AppCompatActivity {
         depositSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try{
+                    int withdraw = Integer.parseInt(String.valueOf(depositInput.getText()));
+                    double currentPrice = db.getFundPriceForDate(cal);
 
+                    if(withdraw > currinv){
+                        Toast.makeText(WithdrawActivity.this, "출금액은 투자액보다 적어야 합니다.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                    String todaystr = dateFormat.format(cal.getTime());
+
+                    double oldgain = db.getFundGainForDate(cal);
+                    db.updateFundPrice(oldgain, currentPrice, currentPrice - Math.round(withdraw),0);
+
+                    double usermoney = currentUser.getCurrentInvestment();
+                    currentUser.newInvestment(usermoney - Math.round(withdraw),
+                            todaystr);
+                    db.updateUser(currentUser);
+
+
+                    Toast.makeText(WithdrawActivity.this, "출금을 완료했습니다.", Toast.LENGTH_SHORT).show();
+                    //새로고침
+                    Intent intent = new Intent(WithdrawActivity.this, MainActivity.class);
+                    intent.putExtra("userid",currentUser.getId());
+                    startActivity(intent);
+
+
+                }catch(Exception e){
+                    Toast.makeText(WithdrawActivity.this, "입력값은 숫자로 입력해 주세요.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

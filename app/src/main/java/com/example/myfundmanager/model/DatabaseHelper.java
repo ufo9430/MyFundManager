@@ -15,6 +15,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import kotlin.Suppress;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "Fund.db";
     private static final int DATABASE_VERSION = 1;
@@ -23,6 +25,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_ID = "_id";
     private static final String COLUMN_DATE = "date";
     private static final String COLUMN_PRICE = "price";
+    private static final String COLUMN_GAIN = "gain";
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     // User 테이블 생성 쿼리
@@ -30,15 +33,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "id INTEGER PRIMARY KEY AUTOINCREMENT," +
             "username TEXT," +
             "password TEXT," +
-            "initialinvest DECIMAL," +
-            "currentinvest DECIMAL," +
+            "initialinvest REAL," +
+            "currentinvest REAL," +
             "investdate TEXT" +
             ")";
 
     private static final String CREATE_FUND_TABLE = "CREATE TABLE " + TABLE_FUND + "(" +
             COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COLUMN_DATE + " TEXT, " +
-            COLUMN_PRICE + " REAL" +
+            COLUMN_PRICE + " REAL," +
+            COLUMN_GAIN + " REAL" +
             ")";
 
     // User 중복조회
@@ -62,12 +66,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return exists;
     }
 
-    // Stock 테이블 생성 쿼리
-    private static final String SQL_CREATE_STOCK_TABLE = "CREATE TABLE Stocks (" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-            "stock_name TEXT," +
-            "current_price REAL" +
-            ")";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -95,8 +93,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put("initialinvest", 0);
         values.put("currentinvest", 0);
         values.put("investdate", dateFormat.format(cal.getTime()));
+
         long result = db.insert("Users", null, values);
         db.close();
+
         return result;
     }
 
@@ -111,6 +111,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             user.setId(cursor.getInt(cursor.getColumnIndex("id")));
             user.setUsername(cursor.getString(cursor.getColumnIndex("username")));
             user.setPassword(cursor.getString(cursor.getColumnIndex("password")));
+            user.setInitialInvestment(cursor.getDouble(cursor.getColumnIndex("initialinvest")));
+            user.setCurrentInvestment(cursor.getDouble(cursor.getColumnIndex("currentinvest")));
+            user.setInvestDate(cursor.getString(cursor.getColumnIndex("investdate")));
             // 추가적으로 필요한 정보 설정 가능
         }
         if (cursor != null) {
@@ -130,6 +133,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             user.setId(cursor.getInt(cursor.getColumnIndex("id")));
             user.setUsername(cursor.getString(cursor.getColumnIndex("username")));
             user.setPassword(cursor.getString(cursor.getColumnIndex("password")));
+            user.setInitialInvestment(cursor.getDouble(cursor.getColumnIndex("initialinvest")));
+            user.setCurrentInvestment(cursor.getDouble(cursor.getColumnIndex("currentinvest")));
+            user.setInvestDate(cursor.getString(cursor.getColumnIndex("investdate")));
             // 필요한 정보 설정 가능
         }
         if (cursor != null) {
@@ -159,22 +165,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.rawQuery("SELECT * FROM Users", null);
     }
 
-    public void updateFundPrice(double newPrice) {
+    public void updateFundPrice(double oldgain, double oldPrice, double newPrice, int flag) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        Date currentDate = MyApplication.getFixedCalendar().getTime();
+        Calendar cal = MyApplication.getFixedCalendar();
+        Date currentDate = cal.getTime();
         String formattedDate = dateFormat.format(currentDate);
+        Double dailygain;
+
+        if(flag == 1){
+            dailygain = newPrice - oldPrice;
+        }else{
+            dailygain = oldgain;
+        }
 
         // Check if the date exists in the database
         Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_FUND + " WHERE " + COLUMN_DATE + "=?", new String[]{formattedDate});
         if (cursor.getCount() > 0) {
             // Update the existing record
             values.put(COLUMN_PRICE, newPrice);
+            values.put(COLUMN_GAIN, dailygain);
+
             db.update(TABLE_FUND, values, COLUMN_DATE + "=?", new String[]{formattedDate});
         } else {
             // Insert a new record if the date does not exist
             values.put(COLUMN_DATE, formattedDate);
             values.put(COLUMN_PRICE, newPrice);
+            values.put(COLUMN_GAIN, dailygain);
             db.insert(TABLE_FUND, null, values);
         }
 
@@ -204,5 +221,56 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
         return fundPrice;
+    }
+
+    @SuppressLint("Range")
+    public double getFundGainForDate(Calendar cal) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        double fundGain = 0.0;
+        String date = dateFormat.format(cal.getTime());
+        Cursor cursor = db.query(
+                TABLE_FUND,
+                new String[]{COLUMN_GAIN},
+                COLUMN_DATE + "=?",
+                new String[]{date},
+                null,
+                null,
+                null
+        );
+
+        if (cursor != null && cursor.moveToFirst()) {
+            fundGain = cursor.getDouble(cursor.getColumnIndex(COLUMN_GAIN));
+            cursor.close();
+        }
+        db.close();
+
+        return fundGain;
+    }
+
+
+    @SuppressLint("Range")
+    public void updateInvestmentsByPercentage(double percentageChange) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM users", null);
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                int userId = cursor.getInt(cursor.getColumnIndex("id"));
+                double currentInvestment = cursor.getDouble(cursor.getColumnIndex("currentinvest"));
+
+                double updatedInvestment = Math.round(currentInvestment + (currentInvestment * (percentageChange / 100)));
+
+                ContentValues values = new ContentValues();
+                values.put("currentinvest", updatedInvestment);
+
+                db.update("users", values, "id=?", new String[]{String.valueOf(userId)});
+            } while (cursor.moveToNext());
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        db.close();
     }
 }

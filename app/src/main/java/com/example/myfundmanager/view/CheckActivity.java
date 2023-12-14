@@ -6,15 +6,23 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myfundmanager.MyApplication;
 import com.example.myfundmanager.R;
 import com.example.myfundmanager.model.DatabaseHelper;
 import com.example.myfundmanager.model.User;
 
+import java.util.Calendar;
+
 public class CheckActivity extends AppCompatActivity {
 
-    double getGain(double initinv, double currinv){
-        return initinv-currinv;
+    Calendar cal = MyApplication.getFixedCalendar();
+    DatabaseHelper db = new DatabaseHelper(this);
+    double getGain(double currinv){
+        double fundgain = db.getFundGainForDate(cal);
+        double totalfund = db.getFundPriceForDate(cal);
+        return Math.round(fundgain * (currinv / totalfund));
     }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,8 +44,8 @@ public class CheckActivity extends AppCompatActivity {
         checkUsername.setText("사용자 : "+currentUser.getUsername()+"의 투자 정보");
         checkInitialInvest.setText("초기 투자 금액 : "+initinv);
         checkCurrentInvest.setText("현재 투자 금액 : "+currinv);
-        checkUserGain.setText("고객 수익 : "+ getGain(initinv,currinv));
-        checkFundGain.setText("펀드 수익 : "+ 0);
+        checkUserGain.setText("일일 고객 수익 : "+ getGain(currinv));
+        checkFundGain.setText("일일 펀드 수익 : "+ db.getFundGainForDate(cal));
 
     }
 }
