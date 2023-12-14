@@ -32,6 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
+            android:background="@null"
             android:hint="아이디"
             android:padding="25dp" />
 
@@ -40,6 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
+            android:background="@null"
             android:hint="비밀번호"
             android:inputType="textPassword"
             android:padding="25dp" />
@@ -51,9 +53,12 @@
             android:layout_centerHorizontal="false"
             android:layout_centerVertical="false"
             android:layout_gravity="center_horizontal"
+            android:background="@drawable/moneybutton"
             android:elevation="5dp"
             android:fontFamily="@font/notosanskrbold"
-            android:text="회원 가입" />
+            android:text="회원 가입"
+            android:textColor="#fff"
+            android:textSize="18sp" />
 
     </LinearLayout>
 
